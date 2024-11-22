@@ -6,9 +6,22 @@ body {
     padding: 0;
 }
 
+header {
+    display: flex; /* Flexbox for horizontal alignment */
+    align-items: center; /* Vertically align items */
+    justify-content: center; /* Center horizontally */
+    margin: 20px 0;
+}
+
 h1 {
     color: #ffffff;
-    margin: 20px 0;
+    margin: 0 0 0 10px; /* Add space between the logo and title */
+    font-size: 24px;
+}
+
+#logo {
+    width: 120px; /* Adjust size of the logo */
+    height: auto;
 }
 
 #ground-container {
@@ -31,4 +44,10 @@ canvas {
     color: white;
     pointer-events: none;
     transform: translate(-50%, -50%);
+}
+
+button, input, select {
+    margin: 5px;
+    padding: 10px;
+    font-size: 14px;
 }

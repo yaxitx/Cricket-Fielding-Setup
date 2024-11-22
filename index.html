@@ -7,19 +7,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Fielding Setup - SL vs SA</h1>
+    <header id="header">
+        <img src="Logo/The%20game%20read%20new%20Logo.png" alt="Logo" id="logo">
+        <h1>Fielding Setup - SL vs SA</h1>
+    </header>
+    
     <div id="ground-container">
         <canvas id="cricketGround" width="800" height="800"></canvas>
     </div>
+
     <h2>Save and Load Templates</h2>
-<div>
-    <input type="text" id="templateName" placeholder="Enter template name">
-    <button id="saveTemplate">Save Template</button>
-    <button id="loadTemplate">Load Template</button>
-    <select id="templateList">
-        <option value="">Select a Template</option>
-    </select>
-</div>
+    <div>
+        <input type="text" id="templateName" placeholder="Enter template name">
+        <button id="saveTemplate">Save Template</button>
+        <button id="loadTemplate">Load Template</button>
+        <select id="templateList">
+            <option value="">Select a Template</option>
+        </select>
+    </div>
 
     <script src="script.js"></script>
 </body>
