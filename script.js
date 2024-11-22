@@ -30,7 +30,7 @@ const fielders = [
     { x: 300, y: 500, label: "Square Leg", movable: true },
     { x: 600, y: 600, label: "Long On", movable: true },
     { x: 200, y: 600, label: "Third Man", movable: true },
-    { x: 600, y: 240, label: "Deep Point", movable: true },
+    { x: 600, y: 240, label: "Deep Point", movable: true }, // Ensure all players are properly placed
 ];
 
 let selectedFielder = null;
@@ -88,7 +88,7 @@ function drawFielders() {
 
         // Add text labels for fielding positions
         ctx.fillStyle = "#000"; // Black color for text
-        ctx.font = "12px Arial";
+        ctx.font = "bold 16px Arial"; // Bold text with increased font size
         ctx.textAlign = "center";
         ctx.fillText(fielder.label, fielder.x, fielder.y - 15);
     });
@@ -145,13 +145,6 @@ canvas.addEventListener("mousemove", (event) => {
 canvas.addEventListener("mouseup", () => {
     selectedFielder = null;
 });
-
-// Initialize the ground
-drawGround();
-drawFielders();
-
-
-
 
 // Array to hold templates
 let templates = JSON.parse(localStorage.getItem('templates')) || []; // Load saved templates
@@ -223,3 +216,5 @@ document.getElementById('loadTemplate').addEventListener('click', loadTemplate);
 
 // Initialize template list on page load
 updateTemplateList();
+drawGround();
+drawFielders();
