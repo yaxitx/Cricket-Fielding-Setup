@@ -218,3 +218,127 @@ document.getElementById('loadTemplate').addEventListener('click', loadTemplate);
 updateTemplateList();
 drawGround();
 drawFielders();
+
+
+
+//******************************Bastman hit direction*************************************
+
+
+let isArrowVisible = false;
+let arrowStart = { x: 400, y: 350 }; // Fixed starting point (batsman's crease)
+let arrowEnd = { x: 450, y: 300 }; // Initial endpoint (draggable)
+let isDraggingArrow = false;
+let isDraggingFielder = false; // Track if a fielder is being dragged
+
+// Function to draw the arrow
+function drawArrow() {
+    if (!isArrowVisible) return;
+
+    // Draw the arrow line
+    ctx.beginPath();
+    ctx.moveTo(arrowStart.x, arrowStart.y); // Fixed starting point at the crease
+    ctx.lineTo(arrowEnd.x, arrowEnd.y); // Draggable endpoint
+    ctx.strokeStyle = "#ff0000"; // Red color for the arrow
+    ctx.lineWidth = 5; // Increased arrow width
+    ctx.stroke();
+
+    // Draw arrowhead
+    const angle = Math.atan2(arrowEnd.y - arrowStart.y, arrowEnd.x - arrowStart.x);
+    const headLength = 15; // Adjust arrowhead size
+
+    // Calculate the points for the arrowhead
+    const arrowHeadX1 = arrowEnd.x - headLength * Math.cos(angle - Math.PI / 7);
+    const arrowHeadY1 = arrowEnd.y - headLength * Math.sin(angle - Math.PI / 7);
+
+    const arrowHeadX2 = arrowEnd.x - headLength * Math.cos(angle + Math.PI / 7);
+    const arrowHeadY2 = arrowEnd.y - headLength * Math.sin(angle + Math.PI / 7);
+
+    // Draw the arrowhead
+    ctx.beginPath();
+    ctx.moveTo(arrowEnd.x, arrowEnd.y); // Endpoint of the arrow
+    ctx.lineTo(arrowHeadX1, arrowHeadY1);
+    ctx.lineTo(arrowHeadX2, arrowHeadY2);
+    ctx.closePath(); // Close the triangle
+    ctx.fillStyle = "#ff0000"; // Red color for arrowhead
+    ctx.fill();
+}
+
+// Update the ground and fielders (with the arrow if visible)
+function updateCanvas() {
+    drawGround();
+    drawFielders();
+    drawArrow();
+}
+
+// Add arrow
+document.getElementById("addArrow").addEventListener("click", () => {
+    if (!isArrowVisible) {
+        isArrowVisible = true;
+        updateCanvas();
+    }
+});
+
+// Remove arrow
+document.getElementById("removeArrow").addEventListener("click", () => {
+    if (isArrowVisible) {
+        isArrowVisible = false;
+        updateCanvas();
+    }
+});
+
+// Handle mouse down event
+canvas.addEventListener("mousedown", (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Check if clicking near the arrow's endpoint
+    const distanceToArrowEnd = Math.sqrt((mouseX - arrowEnd.x) ** 2 + (mouseY - arrowEnd.y) ** 2);
+    if (isArrowVisible && distanceToArrowEnd <= 10) {
+        isDraggingArrow = true;
+        return; // Give priority to arrow dragging
+    }
+
+    // Check if clicking on a fielder
+    selectedFielder = getFielderAtPosition(mouseX, mouseY);
+    if (selectedFielder) {
+        isDraggingFielder = true;
+    }
+});
+
+// Handle mouse move event
+canvas.addEventListener("mousemove", (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Drag the arrow
+    if (isDraggingArrow) {
+        arrowEnd.x = mouseX;
+        arrowEnd.y = mouseY;
+        updateCanvas();
+        return;
+    }
+
+    // Drag the fielder
+    if (isDraggingFielder && selectedFielder) {
+        selectedFielder.x = mouseX;
+        selectedFielder.y = mouseY;
+
+        updateFielderLabel(selectedFielder);
+        updateCanvas();
+    }
+});
+
+// Handle mouse up event
+canvas.addEventListener("mouseup", () => {
+    isDraggingArrow = false;
+    isDraggingFielder = false;
+    selectedFielder = null;
+});
+
+// Initialize the canvas
+updateCanvas();
+
+
+
