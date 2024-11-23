@@ -1,36 +1,57 @@
 const canvas = document.getElementById("cricketGround");
 const ctx = canvas.getContext("2d");
 
-// Cricket field dimensions
-const FIELD_RADIUS = 400;
-const CIRCLE_RADIUS = 200;
+// Scaling factor for resizing the ground
+let scaleFactor = 1.2; // Adjust this value to scale the ground size
+
+// Adjust canvas dimensions based on scaling
+canvas.width = 800 * scaleFactor;
+canvas.height = 800 * scaleFactor;
+
+// Scaled cricket field dimensions
+const FIELD_RADIUS = 400 * scaleFactor;
+const CIRCLE_RADIUS = 200 * scaleFactor;
+const PITCH_WIDTH = 50 * scaleFactor;
+const PITCH_HEIGHT = 160 * scaleFactor;
 
 // Fielding positions for both ends
 const fieldingPositions = [
-    { label: "Fine Leg", angleStart: 135, angleEnd: 180 },
-    { label: "Square Leg", angleStart: 90, angleEnd: 135 },
-    { label: "Mid-Wicket", angleStart: 45, angleEnd: 90 },
-    { label: "Mid-On", angleStart: 0, angleEnd: 45 },
-    { label: "Mid-Off", angleStart: -45, angleEnd: 0 },
-    { label: "Cover", angleStart: -90, angleEnd: -45 },
-    { label: "Point", angleStart: -135, angleEnd: -90 },
-    { label: "Third Man", angleStart: -180, angleEnd: -135 },
-    { label: "Deep Point", angleStart: -90, angleEnd: -135 },
+    // { label: "Fine Leg", angleStart: 200, angleEnd: 240 }, // Leg side, backward
+    // { label: "Backward Square Leg", angleStart: 240, angleEnd: 270 }, // Leg side
+    // { label: "Square Leg", angleStart: 270, angleEnd: 300 }, // Leg side, square
+    // { label: "Mid-Wicket", angleStart: 300, angleEnd: 330 }, // Leg side, close in
+    // { label: "Mid-On", angleStart: 330, angleEnd: 360 }, // Leg side, in front
+    // { label: "Mid-Off", angleStart: 0, angleEnd: 30 }, // Off side, in front
+    // { label: "Extra Cover", angleStart: 30, angleEnd: 60 }, // Off side
+    // { label: "Cover", angleStart: 60, angleEnd: 90 }, // Off side, close
+    // { label: "Point", angleStart: 90, angleEnd: 120 }, // Off side, square
+    // { label: "Backward Point", angleStart: 120, angleEnd: 150 }, // Off side, backward
+    // { label: "Third Man", angleStart: 150, angleEnd: 200 }, // Off side, deep backward
+    // { label: "Deep Fine Leg", angleStart: 200, angleEnd: 240 }, // Leg side, deep backward
+    // { label: "Deep Square Leg", angleStart: 240, angleEnd: 270 }, // Leg side, deep square
+    // { label: "Deep Mid-Wicket", angleStart: 300, angleEnd: 330 }, // Leg side, deep mid
+    // { label: "Deep Mid-On", angleStart: 330, angleEnd: 360 }, // Leg side, deep in front
+    // { label: "Deep Mid-Off", angleStart: 0, angleEnd: 30 }, // Off side, deep in front
+    // { label: "Deep Extra Cover", angleStart: 30, angleEnd: 60 }, // Off side, deep close
+    // { label: "Deep Cover", angleStart: 60, angleEnd: 90 }, // Off side, deep square
+    // { label: "Deep Backward Point", angleStart: 120, angleEnd: 150 }, // Off side, deep backward
 ];
 
-// Fielder positions and labels
+
+
+// Fielding positions and labels
 const fielders = [
-    { x: 400, y: 520, label: "Bowler", movable: false }, // Bowler farther from the stumps at the south end
-    { x: 400, y: 300, label: "Wicket-Keeper", movable: false }, // Wicket-keeper moved behind the stumps
-    { x: 400, y: 240, label: "Mid-Off", movable: true },
-    { x: 600, y: 400, label: "Point", movable: true },
-    { x: 400, y: 600, label: "Mid-On", movable: true },
-    { x: 200, y: 400, label: "Fine Leg", movable: true },
-    { x: 500, y: 330, label: "Cover", movable: true },
-    { x: 300, y: 500, label: "Square Leg", movable: true },
-    { x: 600, y: 600, label: "Long On", movable: true },
-    { x: 200, y: 600, label: "Third Man", movable: true },
-    { x: 600, y: 240, label: "Deep Point", movable: true }, // Ensure all players are properly placed
+    { x: 400 * scaleFactor, y: 520 * scaleFactor, label: "Bowler", movable: false },
+    { x: 400 * scaleFactor, y: 300 * scaleFactor, label: "Wicket-Keeper", movable: false },
+    { x: 400 * scaleFactor, y: 240 * scaleFactor, label: "", movable: true },
+    { x: 600 * scaleFactor, y: 400 * scaleFactor, label: "", movable: true },
+    { x: 400 * scaleFactor, y: 600 * scaleFactor, label: "", movable: true },
+    { x: 200 * scaleFactor, y: 400 * scaleFactor, label: "", movable: true },
+    { x: 500 * scaleFactor, y: 330 * scaleFactor, label: "", movable: true },
+    { x: 300 * scaleFactor, y: 500 * scaleFactor, label: "", movable: true },
+    { x: 600 * scaleFactor, y: 600 * scaleFactor, label: "", movable: true },
+    { x: 200 * scaleFactor, y: 600 * scaleFactor, label: "", movable: true },
+    { x: 600 * scaleFactor, y: 240 * scaleFactor, label: "", movable: true },
 ];
 
 let selectedFielder = null;
@@ -45,52 +66,123 @@ function drawGround() {
 
     // Outer boundary
     ctx.beginPath();
-    ctx.arc(400, 400, FIELD_RADIUS, 0, Math.PI * 2);
+    ctx.arc(canvas.width / 2, canvas.height / 2, FIELD_RADIUS, 0, Math.PI * 2);
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // 30-yard circle
     ctx.beginPath();
-    ctx.arc(400, 400, CIRCLE_RADIUS, 0, Math.PI * 2);
+    ctx.arc(canvas.width / 2, canvas.height / 2, CIRCLE_RADIUS, 0, Math.PI * 2);
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Pitch (Shortened)
+    // Pitch
     ctx.fillStyle = "#e67e22";
-    ctx.fillRect(380, 320, 50, 160); // Shortened pitch
+    ctx.fillRect(
+        canvas.width / 2 - PITCH_WIDTH / 2,
+        canvas.height / 2 - PITCH_HEIGHT / 2,
+        PITCH_WIDTH,
+        PITCH_HEIGHT
+    );
 
     // Creases and stumps
     drawCreasesAndStumps();
 }
 
+let isRightHandBatsman = true; // Default: Right-handed batsman
+
+
+function drawGroundLabels() {
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const textDistance = (FIELD_RADIUS + CIRCLE_RADIUS) / 2; // Position labels midway between 30-yard circle and boundary
+
+    ctx.fillStyle = "#ffffff"; // White text color
+    ctx.font = `bold ${20 * scaleFactor}px Arial`; // Scale font size
+    ctx.textAlign = "center";
+
+    if (isRightHandBatsman) {
+        // Right-handed batsman
+        ctx.fillText("Off Side", centerX - textDistance, centerY); // Off Side on the left
+        ctx.fillText("Leg Side", centerX + textDistance, centerY); // Leg Side on the right
+    } else {
+        // Left-handed batsman
+        ctx.fillText("Off Side", centerX + textDistance, centerY); // Off Side on the right
+        ctx.fillText("Leg Side", centerX - textDistance, centerY); // Leg Side on the left
+    }
+}
+
+document.getElementById("rightHandBatsman").addEventListener("click", () => {
+    isRightHandBatsman = true; // Set to Right-Handed
+    updateCanvas(); // Re-render the canvas
+});
+
+document.getElementById("leftHandBatsman").addEventListener("click", () => {
+    isRightHandBatsman = false; // Set to Left-Handed
+    updateCanvas(); // Re-render the canvas
+});
+
+
+
 // Draw creases and stumps at both ends
 function drawCreasesAndStumps() {
+    const centerX = canvas.width / 2; // Center X of the canvas
+    const centerY = canvas.height / 2; // Center Y of the canvas
+    const creaseLength = 67 * scaleFactor; // Increase the crease length
+    const stumpWidth = 10 * scaleFactor; // Stump width
+    const stumpHeight = 10 * scaleFactor; // Stump height
+    const creaseOffset = 15 * scaleFactor; // Adjust the distance from the edge of the pitch
+
     // South End (Bowler's end)
     ctx.fillStyle = "#fff";
-    ctx.fillRect(399, 460, 10, 10); // Stumps
-    ctx.fillRect(375, 450, 60, 2);  // Single crease line
+    // Stumps inside the pitch at the south end
+    ctx.fillRect(
+        centerX - stumpWidth / 2,
+        centerY + PITCH_HEIGHT / 1.8 - stumpHeight - creaseOffset, // Move up into the pitch
+        stumpWidth,
+        stumpHeight
+    );
+    // Crease extended to both sides
+    ctx.fillRect(
+        centerX - creaseLength / 2,
+        centerY + PITCH_HEIGHT / 2.2 - stumpHeight - creaseOffset + stumpHeight / 2, // Align crease with stumps
+        creaseLength,
+        2
+    );
 
     // North End (Wicket-Keeper's end)
-    ctx.fillRect(399, 330, 10, 10); // Stumps (aligned correctly on pitch)
-    ctx.fillRect(375, 348, 60, 2);  // Single crease line (below the stumps)
+    // Stumps inside the pitch at the north end
+    ctx.fillRect(
+        centerX - stumpWidth / 2,
+        centerY - PITCH_HEIGHT / 1.9 - stumpHeight / 2 + creaseOffset, // Move down into the pitch
+        stumpWidth,
+        stumpHeight
+    );
+    // Crease extended to both sides
+    ctx.fillRect(
+        centerX - creaseLength / 2,
+        centerY - PITCH_HEIGHT / 2.3 - stumpHeight / 2 + creaseOffset + stumpHeight / 2, // Align crease with stumps
+        creaseLength,
+        2
+    );
 }
 
 // Draw fielders
 function drawFielders() {
-    fielders.forEach((fielder, index) => {
+    fielders.forEach((fielder) => {
         // Draw fielder
         ctx.beginPath();
-        ctx.arc(fielder.x, fielder.y, 10, 0, Math.PI * 2);
-        ctx.fillStyle = fielder.movable ? "#3498db" : "#e74c3c"; // Different color for movable vs non-movable players
+        ctx.arc(fielder.x, fielder.y, 10 * scaleFactor, 0, Math.PI * 2);
+        ctx.fillStyle = fielder.movable ? "#00008b" : "#e74c3c"; // Dark blue for movable, red for fixed
         ctx.fill();
 
-        // Add text labels for fielding positions
+        // Add bold text labels for fielding positions
         ctx.fillStyle = "#000"; // Black color for text
-        ctx.font = "bold 16px Arial"; // Bold text with increased font size
+        ctx.font = `bold ${16 * scaleFactor}px Arial`; // Bold and scaled text size
         ctx.textAlign = "center";
-        ctx.fillText(fielder.label, fielder.x, fielder.y - 15);
+        ctx.fillText(fielder.label, fielder.x, fielder.y - 15 * scaleFactor);
     });
 }
 
@@ -154,7 +246,7 @@ function saveTemplate() {
     const templateName = document.getElementById('templateName').value.trim();
 
     if (!templateName) {
-        alert('Please enter a template name');
+    
         return;
     }
 
@@ -169,7 +261,7 @@ function saveTemplate() {
     templates.push(template);
     localStorage.setItem('templates', JSON.stringify(templates));
 
-    alert(`Template "${templateName}" saved!`);
+    
     updateTemplateList();
 }
 
@@ -178,14 +270,14 @@ function loadTemplate() {
     const selectedTemplateName = document.getElementById('templateList').value;
 
     if (!selectedTemplateName) {
-        alert('Please select a template to load');
+        
         return;
     }
 
     const selectedTemplate = templates.find(t => t.name === selectedTemplateName);
 
     if (!selectedTemplate) {
-        alert('Template not found');
+        
         return;
     }
 
@@ -194,7 +286,7 @@ function loadTemplate() {
     drawGround();
     drawFielders();
 
-    alert(`Template "${selectedTemplateName}" loaded!`);
+    
 }
 
 // Update template dropdown
@@ -221,69 +313,88 @@ drawFielders();
 
 
 
-//******************************Bastman hit direction*************************************
+//******************************Bastman hit direction - Arrow*****************************
 
 
-let isArrowVisible = false;
-let arrowStart = { x: 400, y: 350 }; // Fixed starting point (batsman's crease)
-let arrowEnd = { x: 450, y: 300 }; // Initial endpoint (draggable)
+let arrows = []; // Array to hold all arrows
 let isDraggingArrow = false;
-let isDraggingFielder = false; // Track if a fielder is being dragged
+let selectedArrowIndex = null;
 
-// Function to draw the arrow
-function drawArrow() {
-    if (!isArrowVisible) return;
+// Function to draw all arrows
+function drawArrows() {
+    arrows.forEach((arrow) => {
+        const { start, end } = arrow;
 
-    // Draw the arrow line
-    ctx.beginPath();
-    ctx.moveTo(arrowStart.x, arrowStart.y); // Fixed starting point at the crease
-    ctx.lineTo(arrowEnd.x, arrowEnd.y); // Draggable endpoint
-    ctx.strokeStyle = "#ff0000"; // Red color for the arrow
-    ctx.lineWidth = 5; // Increased arrow width
-    ctx.stroke();
+        // Draw the arrow line
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y); // Fixed starting point at the crease
+        ctx.lineTo(end.x, end.y); // Draggable endpoint
+        ctx.strokeStyle = "#ff0000"; // Red color for the arrow
+        ctx.lineWidth = 5;
+        ctx.stroke();
 
-    // Draw arrowhead
-    const angle = Math.atan2(arrowEnd.y - arrowStart.y, arrowEnd.x - arrowStart.x);
-    const headLength = 15; // Adjust arrowhead size
+        // Draw arrowhead
+        const angle = Math.atan2(end.y - start.y, end.x - start.x);
+        const headLength = 20; // Adjust arrowhead size
 
-    // Calculate the points for the arrowhead
-    const arrowHeadX1 = arrowEnd.x - headLength * Math.cos(angle - Math.PI / 7);
-    const arrowHeadY1 = arrowEnd.y - headLength * Math.sin(angle - Math.PI / 7);
+        const arrowHeadX1 = end.x - headLength * Math.cos(angle - Math.PI / 5);
+        const arrowHeadY1 = end.y - headLength * Math.sin(angle - Math.PI / 5);
+        const arrowHeadX2 = end.x - headLength * Math.cos(angle + Math.PI / 5);
+        const arrowHeadY2 = end.y - headLength * Math.sin(angle + Math.PI / 5);
 
-    const arrowHeadX2 = arrowEnd.x - headLength * Math.cos(angle + Math.PI / 7);
-    const arrowHeadY2 = arrowEnd.y - headLength * Math.sin(angle + Math.PI / 7);
-
-    // Draw the arrowhead
-    ctx.beginPath();
-    ctx.moveTo(arrowEnd.x, arrowEnd.y); // Endpoint of the arrow
-    ctx.lineTo(arrowHeadX1, arrowHeadY1);
-    ctx.lineTo(arrowHeadX2, arrowHeadY2);
-    ctx.closePath(); // Close the triangle
-    ctx.fillStyle = "#ff0000"; // Red color for arrowhead
-    ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(end.x, end.y); // Endpoint of the arrow
+        ctx.lineTo(arrowHeadX1, arrowHeadY1);
+        ctx.lineTo(arrowHeadX2, arrowHeadY2);
+        ctx.closePath(); // Close the triangle
+        ctx.fillStyle = "#ff0000"; // Red color for arrowhead
+        ctx.fill();
+    });
 }
 
-// Update the ground and fielders (with the arrow if visible)
+// Update the ground and fielders (with arrows if visible)
 function updateCanvas() {
     drawGround();
+    drawGroundLabels();
     drawFielders();
-    drawArrow();
+    drawArrows();
 }
 
-// Add arrow
+// Add a new arrow
 document.getElementById("addArrow").addEventListener("click", () => {
-    if (!isArrowVisible) {
-        isArrowVisible = true;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 1.9;
+    const creaseOffset = 15 * scaleFactor; // Offset to align with the north-end crease
+
+    const newArrow = {
+        start: { 
+            x: centerX, 
+            y: centerY - PITCH_HEIGHT / 1.9 - 10 * scaleFactor + creaseOffset // Align with wicket keeper's end crease
+        },
+        end: { 
+            x: centerX + 50 * scaleFactor, 
+            y: centerY - PITCH_HEIGHT / 1.9 - 50 * scaleFactor + creaseOffset // Initial endpoint slightly away
+        },
+    };
+    arrows.push(newArrow);
+    updateCanvas();
+});
+
+
+// Remove the last added arrow
+document.getElementById("removeArrow").addEventListener("click", () => {
+    if (arrows.length > 0) {
+        arrows.pop(); // Remove the last arrow
         updateCanvas();
+    } else {
+        alert("No arrows to remove!");
     }
 });
 
-// Remove arrow
-document.getElementById("removeArrow").addEventListener("click", () => {
-    if (isArrowVisible) {
-        isArrowVisible = false;
-        updateCanvas();
-    }
+// Remove all arrows
+document.getElementById("removeAllArrows").addEventListener("click", () => {
+    arrows = []; // Clear all arrows
+    updateCanvas();
 });
 
 // Handle mouse down event
@@ -292,11 +403,15 @@ canvas.addEventListener("mousedown", (event) => {
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Check if clicking near the arrow's endpoint
-    const distanceToArrowEnd = Math.sqrt((mouseX - arrowEnd.x) ** 2 + (mouseY - arrowEnd.y) ** 2);
-    if (isArrowVisible && distanceToArrowEnd <= 10) {
+    // Check if clicking near the endpoint of any arrow
+    selectedArrowIndex = arrows.findIndex(
+        (arrow) =>
+            Math.sqrt((mouseX - arrow.end.x) ** 2 + (mouseY - arrow.end.y) ** 2) <= 10
+    );
+
+    if (selectedArrowIndex !== -1) {
         isDraggingArrow = true;
-        return; // Give priority to arrow dragging
+        return; // Prioritize dragging arrows
     }
 
     // Check if clicking on a fielder
@@ -308,20 +423,22 @@ canvas.addEventListener("mousedown", (event) => {
 
 // Handle mouse move event
 canvas.addEventListener("mousemove", (event) => {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    if (isDraggingArrow && selectedArrowIndex !== null) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
 
-    // Drag the arrow
-    if (isDraggingArrow) {
-        arrowEnd.x = mouseX;
-        arrowEnd.y = mouseY;
+        // Update the endpoint of the selected arrow
+        arrows[selectedArrowIndex].end = { x: mouseX, y: mouseY };
         updateCanvas();
         return;
     }
 
-    // Drag the fielder
     if (isDraggingFielder && selectedFielder) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left;
+        const mouseY = event.clientY - rect.top;
+
         selectedFielder.x = mouseX;
         selectedFielder.y = mouseY;
 
@@ -334,11 +451,10 @@ canvas.addEventListener("mousemove", (event) => {
 canvas.addEventListener("mouseup", () => {
     isDraggingArrow = false;
     isDraggingFielder = false;
+    selectedArrowIndex = null;
     selectedFielder = null;
 });
 
 // Initialize the canvas
 updateCanvas();
-
-
 

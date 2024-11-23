@@ -12,23 +12,40 @@
         <h1>Fielding Setup - SL vs SA</h1>
     </header>
     
-    <div id="ground-container">
-        <canvas id="cricketGround" width="800" height="800"></canvas>
-    </div>
+    <div id="layout">
+        <!-- Ground Canvas -->
+        <div id="ground-container">
+            <canvas id="cricketGround" width="800" height="800"></canvas>
+        </div>
 
-    <h2>Save and Load Templates</h2>
-    <div>
-        <input type="text" id="templateName" placeholder="Enter player name">
-        <button id="saveTemplate">Save Template</button>
-        <button id="loadTemplate">Load Template</button>
-        <select id="templateList">
-            <option value="">Select a Template</option>
-        </select>
+        <!-- Buttons Section -->
+        <div id="controls-container">
+            <h2>Actions</h2>
+
+            <div class="controls-group">
+                <h3>Save and Load Templates</h3>
+                <input type="text" id="templateName" placeholder="Enter template name">
+                <button id="saveTemplate">Save Template</button>
+                <button id="loadTemplate">Load Template</button>
+                <select id="templateList">
+                    <option value="">Select a Template</option>
+                </select>
+            </div>
+
+            <div class="controls-group">
+                <h3>Arrow Controls</h3>
+                <button id="addArrow">Add Arrow</button>
+                <button id="removeArrow">Remove Selected Arrow</button>
+                <button id="removeAllArrows">Remove All Arrows</button>
+            </div>
+
+            <div class="controls-group">
+                <h3>Batsman Handedness</h3>
+                <button id="rightHandBatsman">Right-Handed Batsman</button>
+                <button id="leftHandBatsman">Left-Handed Batsman</button>
+            </div>
+        </div>
     </div>
-    <div>
-        <button id="addArrow">Add Arrow</button>
-        <button id="removeArrow">Remove Arrow</button>
-    </div>    
 
     <script src="script.js"></script>
 </body>

@@ -1,11 +1,16 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #000000;
     margin: 0;
     padding: 0;
+    display: flex; /* Flexbox for overall layout */
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
 }
 
+/* Header Section */
 header {
     display: flex; /* Flexbox for horizontal alignment */
     align-items: center; /* Vertically align items */
@@ -16,7 +21,7 @@ header {
 h1 {
     color: #ffffff;
     margin: 0 0 0 10px; /* Add space between the logo and title */
-    font-size: 24px;
+    font-size: 50px;
 }
 
 #logo {
@@ -24,9 +29,24 @@ h1 {
     height: auto;
 }
 
+/* Main Layout */
+#layout {
+    display: flex; /* Flexbox to divide layout into two sections */
+    justify-content: center;
+    align-items:flex-start; /* Align content to the top */
+    gap: 0; /* No space between the ground and controls */
+    width: 53%; /* Adjust width for responsiveness */
+    margin: 0 auto; /* Center the layout horizontally */
+}
+
+
+/* Ground Container */
 #ground-container {
-    display: inline-block;
     position: relative;
+    flex: 3; /* Take more space compared to the controls section */
+    margin: 0; /* Remove any default margin */
+    padding: 0; /* Remove any default padding */
+    border: none; /* Optional: If there's a border, it creates spacing */
 }
 
 canvas {
@@ -37,17 +57,61 @@ canvas {
     cursor: pointer;
 }
 
-.fielding-label {
-    position: absolute;
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
+/* Controls Section */
+#controls-container {
+    flex: 1; /* Take less space compared to the ground */
+    background-color: #1e1e1e; /* Dark background for better contrast */
+    border: 2px solid #ffffff; /* Keep the border if needed */
+    border-radius: 8px;
+    padding: 40px; /* Reduce padding inside the container */
+    color: #ffffff; /* White text color */
+    text-align: left; /* Align text to the left for clarity */
+    max-width: 300px;
+    margin: 0; /* Remove any default margin */
 }
 
+/* Control Groups */
+.controls-group {
+    margin-bottom: 20px; /* Space between groups */
+}
+
+.controls-group h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+/* Buttons and Inputs */
 button, input, select {
-    margin: 5px;
+    display: block; /* Stack buttons and inputs vertically */
+    width: 100%; /* Make them fill the container */
+    margin: 5px 0; /* Add spacing between elements */
     padding: 10px;
     font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button {
+    background-color: #3498db; /* Blue buttons */
+    color: #ffffff; /* White text */
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+
+input {
+    background-color: #2e2e2e; /* Dark input background */
+    color: #ffffff; /* White text */
+    border: 1px solid #ffffff;
+}
+
+select {
+    background-color: #2e2e2e; /* Dark select background */
+    color: #ffffff; /* White text */
+    border: 1px solid #ffffff;
 }
