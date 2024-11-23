@@ -246,8 +246,7 @@ function saveTemplate() {
     const templateName = document.getElementById('templateName').value.trim();
 
     if (!templateName) {
-    
-        return;
+        return; // Exit if no template name is entered
     }
 
     // Save current fielder positions
@@ -256,12 +255,14 @@ function saveTemplate() {
         fielders: JSON.parse(JSON.stringify(fielders)), // Deep copy of current fielders
     };
 
-    // Add to templates and save to local storage
-    templates = templates.filter(t => t.name !== templateName); // Avoid duplicates
+    // Avoid duplicate template names by filtering existing ones
+    templates = templates.filter(t => t.name !== templateName); 
     templates.push(template);
+
+    // Save updated templates to localStorage
     localStorage.setItem('templates', JSON.stringify(templates));
 
-    
+    // Update the dropdown list
     updateTemplateList();
 }
 
@@ -270,29 +271,37 @@ function loadTemplate() {
     const selectedTemplateName = document.getElementById('templateList').value;
 
     if (!selectedTemplateName) {
-        
-        return;
+        return; // Exit if no template is selected
     }
 
     const selectedTemplate = templates.find(t => t.name === selectedTemplateName);
 
     if (!selectedTemplate) {
-        
-        return;
+        return; // Exit if the selected template is not found
     }
 
-    // Load fielders from template
-    fielders.splice(0, fielders.length, ...JSON.parse(JSON.stringify(selectedTemplate.fielders))); // Replace current fielders
+    // Load the selected template
+    fielders.splice(0, fielders.length, ...JSON.parse(JSON.stringify(selectedTemplate.fielders)));
     drawGround();
     drawFielders();
+}
 
-    
+// Remove all templates function
+function removeAllTemplates() {
+    // Clear all templates from localStorage
+    localStorage.removeItem('templates');
+    templates = []; // Clear the templates array in memory
+
+    // Update the dropdown list
+    updateTemplateList();
+
+    alert('All templates have been removed.');
 }
 
 // Update template dropdown
 function updateTemplateList() {
     const templateList = document.getElementById('templateList');
-    templateList.innerHTML = '<option value="">Select a Template</option>'; // Reset options
+    templateList.innerHTML = '<option value="">Select a Template</option>'; // Reset dropdown
 
     templates.forEach(template => {
         const option = document.createElement('option');
@@ -302,9 +311,11 @@ function updateTemplateList() {
     });
 }
 
-// Attach event listeners
+// Attach event listeners for save, load, and remove templates
 document.getElementById('saveTemplate').addEventListener('click', saveTemplate);
 document.getElementById('loadTemplate').addEventListener('click', loadTemplate);
+document.getElementById('removeAllTemplates').addEventListener('click', removeAllTemplates);
+
 
 // Initialize template list on page load
 updateTemplateList();

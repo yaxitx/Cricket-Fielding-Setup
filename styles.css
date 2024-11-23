@@ -35,7 +35,7 @@ h1 {
     justify-content: center;
     align-items:flex-start; /* Align content to the top */
     gap: 0; /* No space between the ground and controls */
-    width: 53%; /* Adjust width for responsiveness */
+    width: 50%; /* Adjust width for responsiveness */
     margin: 0 auto; /* Center the layout horizontally */
 }
 
@@ -66,7 +66,7 @@ canvas {
     padding: 40px; /* Reduce padding inside the container */
     color: #ffffff; /* White text color */
     text-align: left; /* Align text to the left for clarity */
-    max-width: 300px;
+    max-width: 200px;
     margin: 0; /* Remove any default margin */
 }
 
